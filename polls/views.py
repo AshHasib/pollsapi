@@ -1,14 +1,16 @@
 from django.shortcuts import render
-from .models import Poll
+from .models import Poll, Choice, Vote
 from django.http import JsonResponse
 
 #Serializer
-from .serializers import PollSerializer
+from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer
 
 # DRF imports
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework import generics
+
 
 
 # Create your views here.
@@ -17,7 +19,8 @@ from django.shortcuts import get_object_or_404
 
 
 '''
-API using DRF
+API using APIView
+'''
 '''
 class PollList(APIView):
     def get(self, request):
@@ -34,10 +37,30 @@ class PollDetail(APIView):
         return Response(data)
 
 
+'''
+
+'''
+API using generic views
+
+'''
+
+class PollList(generics.ListCreateAPIView):
+    queryset = Poll.objects.all()
+    serializer_class = PollSerializer
 
 
+class PollDetail(generics.RetrieveDestroyAPIView):
+    queryset = Poll.objects.all()
+    serializer_class = PollSerializer
 
 
+class ChoiceList(generics.ListCreateAPIView):
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
+
+
+class CreateVote(generics.CreateAPIView):
+    serializer_class = VoteSerializer
 
 
 
